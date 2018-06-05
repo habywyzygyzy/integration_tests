@@ -33,6 +33,7 @@ public class UserRepositoryTest {
         user = new User();
         user.setFirstName("Jan");
         user.setLastName("Kowalski");
+        user.setLastName("Nowak");
         user.setEmail("john@domain.com");
         user.setAccountStatus(AccountStatus.NEW);
     }
@@ -52,6 +53,36 @@ public class UserRepositoryTest {
 
         Assert.assertThat(users, Matchers.hasSize(1));
         Assert.assertThat(users.get(0).getEmail(), Matchers.equalTo(persistedUser.getEmail()));
+    }
+
+    @Test
+    public void shouldNotFindUserThatIsNotContaintedInDatabase() {
+        User persistedUser = entityManager.persist(user);
+        Assert.assertThat(repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("???", "???", "???"), Matchers.not(Matchers.contains(user)));
+    }
+
+    @Test
+    public void shouldFindUserByMatchingFirstName() {
+        User persistedUser = entityManager.persist(user);
+        Assert.assertThat(repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("Jan", "???", "???"), Matchers.contains(user));
+    }
+
+    @Test
+    public void shouldFindUserByMatchingLastName() {
+        User persistedUser = entityManager.persist(user);
+        Assert.assertThat(repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("???", "Nowak", "???"), Matchers.contains(user));
+    }
+
+    @Test
+    public void shouldFindUserByMatchingEmail() {
+        User persistedUser = entityManager.persist(user);
+        Assert.assertThat(repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("???", "???", "john@domain.com"), Matchers.contains(user));
+    }
+
+    @Test
+    public void shouldFindUserByMatchingFirstNameLastNameAndEmail() {
+        User persistedUser = entityManager.persist(user);
+        Assert.assertThat(repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("???", "???", "john@domain.com"), Matchers.contains(user));
     }
 
     @Test
