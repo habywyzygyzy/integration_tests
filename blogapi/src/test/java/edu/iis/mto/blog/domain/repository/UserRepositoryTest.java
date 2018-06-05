@@ -33,7 +33,6 @@ public class UserRepositoryTest {
         user = new User();
         user.setFirstName("Jan");
         user.setLastName("Kowalski");
-        user.setLastName("Nowak");
         user.setEmail("john@domain.com");
         user.setAccountStatus(AccountStatus.NEW);
     }
@@ -46,7 +45,7 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void shouldFindOneUsersIfRepositoryContainsOneUserEntity() {
+    public void shouldFindOneUserIfRepositoryContainsOneUserEntity() {
 
         User persistedUser = entityManager.persist(user);
         List<User> users = repository.findAll();
@@ -56,33 +55,9 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void shouldNotFindUserThatIsNotContaintedInDatabase() {
+    public void shouldNotFindUserThatIsNotContaintedByDatabase() {
         User persistedUser = entityManager.persist(user);
         Assert.assertThat(repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("???", "???", "???"), Matchers.not(Matchers.contains(user)));
-    }
-
-    @Test
-    public void shouldFindUserByMatchingFirstName() {
-        User persistedUser = entityManager.persist(user);
-        Assert.assertThat(repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("Jan", "???", "???"), Matchers.contains(user));
-    }
-
-    @Test
-    public void shouldFindUserByMatchingLastName() {
-        User persistedUser = entityManager.persist(user);
-        Assert.assertThat(repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("???", "Nowak", "???"), Matchers.contains(user));
-    }
-
-    @Test
-    public void shouldFindUserByMatchingEmail() {
-        User persistedUser = entityManager.persist(user);
-        Assert.assertThat(repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("???", "???", "john@domain.com"), Matchers.contains(user));
-    }
-
-    @Test
-    public void shouldFindUserByMatchingFirstNameLastNameAndEmail() {
-        User persistedUser = entityManager.persist(user);
-        Assert.assertThat(repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("???", "???", "john@domain.com"), Matchers.contains(user));
     }
 
     @Test

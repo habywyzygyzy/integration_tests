@@ -32,6 +32,7 @@ public class LikePostRepositoryTest {
 
     @Before
     public void setUp() {
+
         user = new User();
         user.setFirstName("Jan");
         user.setLastName("Kowalski");
@@ -41,8 +42,10 @@ public class LikePostRepositoryTest {
 
     @Test
     public void shouldFindNoUsersIfRepositoryIsEmpty() {
+
         PostRequest post = new PostRequest();
+        BlogPost blogPost = new BlogPost();
 
-
+        //Assert.assertThat(repository.findByUserAndPost(user, blogPost), Matchers.hasSize(1));
     }
 }
