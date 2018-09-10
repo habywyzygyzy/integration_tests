@@ -30,10 +30,13 @@ public class LikePostRepositoryTest {
     private LikePostRepository repository;
 
     private User user;
+    private User user2;
 
     private BlogPost blogPost;
+    private BlogPost blogPost2;
 
     private LikePost likePost;
+    private LikePost likePost2;
 
     @Before
     public void setUp() {
@@ -50,9 +53,25 @@ public class LikePostRepositoryTest {
         blogPost.setUser(user);
         blogPost = entityManager.persist(blogPost);
 
+        user2 = new User();
+        user2.setFirstName("Adam");
+        user2.setLastName("Nawałka");
+        user2.setEmail("adalka@domain.com");
+        user2.setAccountStatus(AccountStatus.NEW);
+        user2 = entityManager.persist(user2);
+
+        blogPost2 = new BlogPost();
+        blogPost2.setEntry("Test nr 2");
+        blogPost2.setUser(user);
+        blogPost2 = entityManager.persist(blogPost2);
+
         likePost = new LikePost();
         likePost.setUser(user);
         likePost.setPost(blogPost);
+
+        likePost2 = new LikePost();
+        likePost2.setUser(user2);
+        likePost2.setPost(blogPost2);
     }
 
     @Test
@@ -62,9 +81,12 @@ public class LikePostRepositoryTest {
     }
 
     @Test
-    public void shouldFindOneLikePostInRepository() {
+    public void shouldFindTwoLikePostsInRepository() {
 
         repository.save(likePost);
-        Assert.assertThat(repository.findAll(), Matchers.hasSize(1));
+        repository.save(likePost2);
+        Assert.assertThat(repository.findAll(), Matchers.hasSize(2));
     }
+
+
 }
