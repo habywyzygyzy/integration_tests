@@ -69,6 +69,10 @@ public class BlogManagerTest {
         blogPost.setId(1L);
         blogPost.setUser(user);
         blogPost.setEntry("Test Entry");
+
+        Mockito.when(userRepository.findOne(user.getId())).thenReturn(user);
+        Mockito.when(userRepository.findOne(user2.getId())).thenReturn(user2);
+        Mockito.when(blogPostRepository.findOne(blogPost.getId())).thenReturn(blogPost);
     }
 
     @Test
@@ -84,22 +88,14 @@ public class BlogManagerTest {
     @Test
     public void confirmedUserShouldBeAbleToLikePost() {
 
-        Mockito.when(userRepository.findOne(user2.getId())).thenReturn(user2);
-        Mockito.when(blogPostRepository.findOne(blogPost.getId())).thenReturn(blogPost);
-        Optional<LikePost> list = Optional.empty();
-        Mockito.when(likePostRepository.findByUserAndPost(user2, blogPost)).thenReturn(list);
-
+        Mockito.when(likePostRepository.findByUserAndPost(user2, blogPost)).thenReturn(Optional.empty());
         Assert.assertThat(blogService.addLikeToPost(user2.getId(), blogPost.getId()), Matchers.is(true));
     }
 
     @Test(expected = DomainError.class)
     public void newUserShouldNotBeAbleToLikePost() {
 
-        Mockito.when(userRepository.findOne(user.getId())).thenReturn(user);
-        Mockito.when(blogPostRepository.findOne(blogPost.getId())).thenReturn(blogPost);
-        Optional<LikePost> list = Optional.empty();
-        Mockito.when(likePostRepository.findByUserAndPost(user, blogPost)).thenReturn(list);
-
+        Mockito.when(likePostRepository.findByUserAndPost(user, blogPost)).thenReturn(Optional.empty());
         Assert.assertThat(blogService.addLikeToPost(user.getId(), blogPost.getId()), Matchers.is(false));
     }
 
@@ -107,11 +103,7 @@ public class BlogManagerTest {
     public void removedUserShouldNotBeAbleToLikePost() {
 
         user.setAccountStatus(AccountStatus.REMOVED);
-        Mockito.when(userRepository.findOne(user.getId())).thenReturn(user);
-        Mockito.when(blogPostRepository.findOne(blogPost.getId())).thenReturn(blogPost);
-        Optional<LikePost> list = Optional.empty();
-        Mockito.when(likePostRepository.findByUserAndPost(user, blogPost)).thenReturn(list);
-
+        Mockito.when(likePostRepository.findByUserAndPost(user, blogPost)).thenReturn(Optional.empty());
         Assert.assertThat(blogService.addLikeToPost(user.getId(), blogPost.getId()), Matchers.is(false));
     }
 }
