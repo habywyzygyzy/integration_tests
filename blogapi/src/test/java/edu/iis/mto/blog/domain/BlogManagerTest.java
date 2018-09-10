@@ -1,5 +1,6 @@
 package edu.iis.mto.blog.domain;
 
+import edu.iis.mto.blog.domain.errors.DomainError;
 import edu.iis.mto.blog.domain.model.BlogPost;
 import edu.iis.mto.blog.domain.model.LikePost;
 import edu.iis.mto.blog.domain.repository.BlogPostRepository;
@@ -91,4 +92,14 @@ public class BlogManagerTest {
         Assert.assertThat(blogService.addLikeToPost(user2.getId(), blogPost.getId()), Matchers.is(true));
     }
 
+    @Test(expected = DomainError.class)
+    public void newUserShouldNotBeAbleToLikePost() {
+
+        Mockito.when(userRepository.findOne(user.getId())).thenReturn(user);
+        Mockito.when(blogPostRepository.findOne(blogPost.getId())).thenReturn(blogPost);
+        Optional<LikePost> list = Optional.empty();
+        Mockito.when(likePostRepository.findByUserAndPost(user, blogPost)).thenReturn(list);
+
+        Assert.assertThat(blogService.addLikeToPost(user.getId(), blogPost.getId()), Matchers.is(false));
+    }
 }
