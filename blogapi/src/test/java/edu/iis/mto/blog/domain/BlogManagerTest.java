@@ -1,6 +1,7 @@
 package edu.iis.mto.blog.domain;
 
 import edu.iis.mto.blog.domain.model.BlogPost;
+import edu.iis.mto.blog.domain.model.LikePost;
 import edu.iis.mto.blog.domain.repository.BlogPostRepository;
 import edu.iis.mto.blog.domain.repository.LikePostRepository;
 import org.hamcrest.Matchers;
@@ -21,6 +22,8 @@ import edu.iis.mto.blog.domain.model.User;
 import edu.iis.mto.blog.domain.repository.UserRepository;
 import edu.iis.mto.blog.mapper.DataMapper;
 import edu.iis.mto.blog.services.BlogService;
+
+import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -64,11 +67,12 @@ public class BlogManagerTest {
         blogPost = new BlogPost();
         blogPost.setId(1L);
         blogPost.setUser(user);
-        blogPost.setEntry("Test Enry");
+        blogPost.setEntry("Test Entry");
     }
 
     @Test
     public void creatingNewUserShouldSetAccountStatusToNEW() {
+
         blogService.createUser(new UserRequest("John", "Steward", "john@domain.com"));
         ArgumentCaptor<User> userParam = ArgumentCaptor.forClass(User.class);
         Mockito.verify(userRepository).save(userParam.capture());
@@ -76,6 +80,15 @@ public class BlogManagerTest {
         Assert.assertThat(user.getAccountStatus(), Matchers.equalTo(AccountStatus.NEW));
     }
 
+    @Test
+    public void confirmedUserShouldBeAbleToLikePost() {
 
+        Mockito.when(userRepository.findOne(user2.getId())).thenReturn(user2);
+        Mockito.when(blogPostRepository.findOne(blogPost.getId())).thenReturn(blogPost);
+        Optional<LikePost> list = Optional.empty();
+        Mockito.when(likePostRepository.findByUserAndPost(user2, blogPost)).thenReturn(list);
+
+        Assert.assertThat(blogService.addLikeToPost(user2.getId(), blogPost.getId()), Matchers.is(true));
+    }
 
 }
