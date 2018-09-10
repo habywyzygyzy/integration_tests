@@ -102,4 +102,16 @@ public class BlogManagerTest {
 
         Assert.assertThat(blogService.addLikeToPost(user.getId(), blogPost.getId()), Matchers.is(false));
     }
+
+    @Test(expected = DomainError.class)
+    public void removedUserShouldNotBeAbleToLikePost() {
+
+        user.setAccountStatus(AccountStatus.REMOVED);
+        Mockito.when(userRepository.findOne(user.getId())).thenReturn(user);
+        Mockito.when(blogPostRepository.findOne(blogPost.getId())).thenReturn(blogPost);
+        Optional<LikePost> list = Optional.empty();
+        Mockito.when(likePostRepository.findByUserAndPost(user, blogPost)).thenReturn(list);
+
+        Assert.assertThat(blogService.addLikeToPost(user.getId(), blogPost.getId()), Matchers.is(false));
+    }
 }
