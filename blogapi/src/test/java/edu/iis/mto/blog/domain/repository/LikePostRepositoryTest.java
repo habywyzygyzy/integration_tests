@@ -97,4 +97,12 @@ public class LikePostRepositoryTest {
         Assert.assertThat(repository.findByUserAndPost(user, blogPost).get(), Matchers.is(likePost));
     }
 
+    @Test
+    public void shouldNotFindLikePostInRepositoryThatDoesNotContaintsIt() {
+
+        repository.save(likePost);
+        repository.save(likePost2);
+        Assert.assertFalse(repository.findByUserAndPost(user, blogPost2).isPresent());
+    }
+
 }
