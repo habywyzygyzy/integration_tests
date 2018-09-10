@@ -16,7 +16,7 @@ public class CreateUserTest extends FunctionalTests {
 
     @Test
     public void postFormWithMalformedRequestDataReturnsBadRequest() {
-        JSONObject jsonObj = new JSONObject().put("email", "andrzej@domain.com");
+        JSONObject jsonObj = new JSONObject().put("email", "tracy@domain.com");
         RestAssured.given()
                 .accept(ContentType.JSON)
                 .header(HEADER_1, HEADER_2)
@@ -27,23 +27,12 @@ public class CreateUserTest extends FunctionalTests {
     }
 
     @Test
-    public void creatingUserRequiresUniqueEmail() {
-
-        JSONObject first = new JSONObject().put("email", "kamil@gmail.com");
-        JSONObject second = new JSONObject().put("email", "kamil@gmail.com");
-
+    public void postFormWithNonUniqueEmailInRequestDataReturnsConflict() {
+        JSONObject jsonObj = new JSONObject().put("email", "john@domain.com");
         RestAssured.given()
                 .accept(ContentType.JSON)
                 .header(HEADER_1, HEADER_2)
-                .body(first.toString())
-                .expect().log().all()
-                .statusCode(HttpStatus.SC_CREATED)
-                .when().post(USER_API);
-
-        RestAssured.given()
-                .accept(ContentType.JSON)
-                .header(HEADER_1, HEADER_2)
-                .body(second.toString())
+                .body(jsonObj.toString())
                 .expect().log().all()
                 .statusCode(HttpStatus.SC_CONFLICT)
                 .when().post(USER_API);
