@@ -43,10 +43,12 @@ public class LikePostRepositoryTest {
         user.setLastName("Kowalski");
         user.setEmail("john@domain.com");
         user.setAccountStatus(AccountStatus.NEW);
+        user = entityManager.persist(user);
 
         blogPost = new BlogPost();
         blogPost.setEntry("Test");
         blogPost.setUser(user);
+        blogPost = entityManager.persist(blogPost);
 
         likePost = new LikePost();
         likePost.setUser(user);
@@ -57,5 +59,12 @@ public class LikePostRepositoryTest {
     public void shouldFindNoUsersIfRepositoryIsEmpty() {
 
         Assert.assertThat(repository.findAll(), Matchers.hasSize(0));
+    }
+
+    @Test
+    public void shouldFindOneLikePostInRepository() {
+
+        repository.save(likePost);
+        Assert.assertThat(repository.findAll(), Matchers.hasSize(1));
     }
 }
