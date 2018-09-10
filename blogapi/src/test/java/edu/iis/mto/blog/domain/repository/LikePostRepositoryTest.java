@@ -29,12 +29,6 @@ public class LikePostRepositoryTest {
     @Autowired
     private LikePostRepository repository;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private BlogPostRepository blogRepository;
-
     private User user;
 
     private BlogPost blogPost;
@@ -62,8 +56,6 @@ public class LikePostRepositoryTest {
     @Test
     public void shouldFindNoUsersIfRepositoryIsEmpty() {
 
-        userRepository.save(user);
-        List<LikePost> likedPosts = repository.findAll();
-        Assert.assertThat(likedPosts, Matchers.hasSize(0));
+        Assert.assertThat(repository.findAll(), Matchers.hasSize(0));
     }
 }
