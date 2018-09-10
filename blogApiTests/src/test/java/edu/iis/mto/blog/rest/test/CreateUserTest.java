@@ -11,8 +11,8 @@ public class CreateUserTest extends FunctionalTests {
 
     private static final String USER_API = "/blog/user";
 
-    private String HEADER_1 = "Content-Type";
-    private String HEADER_2 = "application/json;charset=UTF-8";
+    private static final String HEADER_1 = "Content-Type";
+    private static final String HEADER_2 = "application/json;charset=UTF-8";
 
     @Test
     public void postFormWithMalformedRequestDataReturnsBadRequest() {

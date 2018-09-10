@@ -9,8 +9,8 @@ import com.jayway.restassured.http.ContentType;
 
 public class CreatePostTest extends FunctionalTests {
 
-    private String HEADER_1 = "Content-Type";
-    private String HEADER_2 = "application/json;charset=UTF-8";
+    private static final String HEADER_1 = "Content-Type";
+    private static final String HEADER_2 = "application/json;charset=UTF-8";
 
     @Test
     public void onlyConfirmedUserShouldBeAbleToPost() {
