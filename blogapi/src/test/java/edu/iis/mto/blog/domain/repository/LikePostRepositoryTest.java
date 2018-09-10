@@ -88,5 +88,13 @@ public class LikePostRepositoryTest {
         Assert.assertThat(repository.findAll(), Matchers.hasSize(2));
     }
 
+    @Test
+    public void shouldFindProperLikePostInRepositoryConsistingTwoLikePosts() {
+
+        repository.save(likePost);
+        repository.save(likePost2);
+        Assert.assertTrue(repository.findByUserAndPost(user, blogPost).isPresent());
+        Assert.assertThat(repository.findByUserAndPost(user, blogPost).get(), Matchers.is(likePost));
+    }
 
 }
