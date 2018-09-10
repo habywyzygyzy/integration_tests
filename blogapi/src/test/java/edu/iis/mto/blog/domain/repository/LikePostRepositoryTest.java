@@ -4,6 +4,7 @@ import java.util.List;
 
 import edu.iis.mto.blog.api.request.PostRequest;
 import edu.iis.mto.blog.domain.model.BlogPost;
+import edu.iis.mto.blog.domain.model.LikePost;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
@@ -28,7 +29,17 @@ public class LikePostRepositoryTest {
     @Autowired
     private LikePostRepository repository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private BlogPostRepository blogRepository;
+
     private User user;
+
+    private BlogPost blogPost;
+
+    private LikePost likePost;
 
     @Before
     public void setUp() {
@@ -38,14 +49,21 @@ public class LikePostRepositoryTest {
         user.setLastName("Kowalski");
         user.setEmail("john@domain.com");
         user.setAccountStatus(AccountStatus.NEW);
+
+        blogPost = new BlogPost();
+        blogPost.setEntry("Test");
+        blogPost.setUser(user);
+
+        likePost = new LikePost();
+        likePost.setUser(user);
+        likePost.setPost(blogPost);
     }
 
     @Test
     public void shouldFindNoUsersIfRepositoryIsEmpty() {
 
-        PostRequest post = new PostRequest();
-        BlogPost blogPost = new BlogPost();
-
-        //Assert.assertThat(repository.findByUserAndPost(user, blogPost), Matchers.hasSize(1));
+        userRepository.save(user);
+        List<LikePost> likedPosts = repository.findAll();
+        Assert.assertThat(likedPosts, Matchers.hasSize(0));
     }
 }
