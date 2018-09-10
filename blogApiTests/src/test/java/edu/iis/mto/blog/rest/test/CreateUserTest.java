@@ -47,7 +47,5 @@ public class CreateUserTest extends FunctionalTests {
                 .expect().log().all()
                 .statusCode(HttpStatus.SC_CONFLICT)
                 .when().post(USER_API);
-
-
     }
 }
